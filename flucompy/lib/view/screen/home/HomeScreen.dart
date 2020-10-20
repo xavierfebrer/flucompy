@@ -2,6 +2,8 @@ import 'dart:math' as math;
 
 import 'package:flucompy/util/Constant.dart';
 import 'package:flucompy/util/PermissionHelper.dart';
+import 'package:flucompy/util/Util.dart';
+import 'package:flucompy/view/navigation/FlucompyNavigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_compass/flutter_compass.dart';
@@ -16,12 +18,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   bool _hasPermissions = false;
   double _lastDirection = 0.0;
+  CompassDirection _currentSelection = CompassDirection.DEFAULT;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      checkLocationPermission();
+      onRefresh();
     });
   }
 
@@ -44,25 +47,24 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
       centerTitle: false,
       backgroundColor: Theme.of(context).accentColor,
+      iconTheme: IconThemeData(color: Constant.COLOR_TEXT_LIGHT),
       actions: <Widget>[
         IconButton(
           icon: Icon(
             Icons.share,
-            color: Constant.COLOR_TEXT_LIGHT,
           ),
           onPressed: () {
             onInputShare();
           },
         ),
-        /*IconButton(
+        IconButton(
           icon: Icon(
             Icons.settings,
-            color: Constant.COLOR_TEXT_LIGHT,
           ),
           onPressed: () {
             onOpenSettings();
           },
-        ),*/
+        ),
       ],
     );
   }
@@ -115,9 +117,9 @@ class _HomeScreenState extends State<HomeScreen> {
 
   void onInputShare() => Share.share(getCompassInfo());
 
-  void onOpenSettings() {
-    // TODO
-  }
+  void onOpenSettings() => FlucompyNavigator.getInstance().navigateToSettings(context, false, (){
+    onRefresh();
+  });
 
   String getCompassInfo() => Constant.TEXT_COMPASS_INFO(_lastDirection);
 
@@ -153,7 +155,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Transform.rotate(
             angle: ((direction ?? 0) * (math.pi / 180) * -1),
             child: Image.asset(
-              Constant.ASSETS_IMAGE_COMPASS_DIRECTION,
+              Constant.ASSETS_IMAGE_COMPASS_DIRECTION_LIST[_currentSelection.index],
             ),
           ),
         );
@@ -180,7 +182,14 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      checkLocationPermission();
+      onRefresh();
     }
+  }
+
+  void onRefresh() {
+    Util.loadCompassDirection().then((value) {
+      _currentSelection = value;
+      checkLocationPermission();
+    });
   }
 }

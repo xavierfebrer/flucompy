@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import 'Constant.dart';
 
 class Util {
 
@@ -20,5 +23,15 @@ class Util {
       );
     });
     return MaterialColor(color.value, swatch);
+  }
+
+  static setSelection(CompassDirection item) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt(Constant.PREFS_COMPASS_DIRECTION_SELECTION, item.index);
+  }
+
+  static Future<CompassDirection> loadCompassDirection() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return CompassDirection.values[prefs.getInt(Constant.PREFS_COMPASS_DIRECTION_SELECTION) ?? CompassDirection.DEFAULT.index];
   }
 }
