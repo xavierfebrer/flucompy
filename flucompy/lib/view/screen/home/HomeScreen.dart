@@ -18,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   bool _hasPermissions = false;
   double _lastDirection = 0.0;
-  CompassDirection _currentSelection = CompassDirection.DEFAULT;
+  CompassDirection _currentSelection = CompassDirection.RED;
 
   @override
   void initState() {
@@ -50,6 +50,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         Constant.APP_NAME,
         style: TextStyle(
           color: Constant.COLOR_TEXT_LIGHT,
+          fontWeight: Constant.TEXT_FONT_WEIGHT,
+          letterSpacing: Constant.TEXT_LETTER_SPACING,
         ),
       ),
       centerTitle: false,
@@ -78,9 +80,9 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
 
   void onInputShare() => Share.share(getCompassInfo());
 
-  void onOpenSettings() => FlucompyNavigator.getInstance().navigateToSettings(context, false, (){
-    onRefresh();
-  });
+  void onOpenSettings() => FlucompyNavigator.getInstance().navigateToSettings(context, false, () {
+        onRefresh();
+      });
 
   Widget getHomeBody() {
     return SafeArea(
@@ -96,7 +98,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       stream: FlutterCompass.events,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text(Constant.TEXT_ERROR_READING_SENSOR(snapshot.error));
+          return Text(Constant.TEXT_ERROR_READING_SENSOR(snapshot.error),
+              style: TextStyle(
+                color: Constant.COLOR_TEXT_DARK,
+                fontWeight: Constant.TEXT_FONT_WEIGHT,
+                letterSpacing: Constant.TEXT_LETTER_SPACING,
+              ));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -107,7 +114,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         _lastDirection = direction ?? 0;
         if (direction == null) {
           return Center(
-            child: Text(Constant.TEXT_SENSOR_NOT_SUPPORTED),
+            child: Text(Constant.TEXT_SENSOR_NOT_SUPPORTED,
+                style: TextStyle(
+                  color: Constant.COLOR_TEXT_DARK,
+                  fontWeight: Constant.TEXT_FONT_WEIGHT,
+                  letterSpacing: Constant.TEXT_LETTER_SPACING,
+                )),
           );
         }
         return Container(
@@ -122,14 +134,19 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       },
     );
     if (!_hasPermissions) {
-      return FlatButton(
+      return RaisedButton(
+        padding: EdgeInsets.all(Constant.PADDING_BUTTON_CHECK_PERMISSIONS),
+        elevation: Constant.ELEVATION_BUTTON_CHECK_PERMISSIONS,
         onPressed: () {
           showLocationPermissionPopup();
         },
         child: Text(
           Constant.TEXT_CHECK_PERMISSIONS,
           style: TextStyle(
+            fontSize: Constant.TEXT_FONT_SIZE_BIG,
             color: Constant.COLOR_TEXT_LIGHT,
+            fontWeight: Constant.TEXT_FONT_WEIGHT_BOLD,
+            letterSpacing: Constant.TEXT_LETTER_SPACING,
           ),
         ),
         color: Theme.of(context).accentColor,
@@ -149,13 +166,26 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text(Constant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED),
+                Text(Constant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED,
+                    style: TextStyle(
+                      color: Constant.COLOR_TEXT_DARK,
+                      fontWeight: Constant.TEXT_FONT_WEIGHT,
+                      letterSpacing: Constant.TEXT_LETTER_SPACING,
+                    )),
               ],
             ),
           ),
           actions: <Widget>[
-            FlatButton(
-              child: Text(Constant.TEXT_REQUEST_PERMISSIONS),
+            RaisedButton(
+              color: Theme.of(context).primaryColor,
+              child: Text(
+                Constant.TEXT_REQUEST_PERMISSIONS,
+                style: TextStyle(
+                  color: Constant.COLOR_TEXT_LIGHT,
+                  fontWeight: Constant.TEXT_FONT_WEIGHT_BOLD,
+                  letterSpacing: Constant.TEXT_LETTER_SPACING,
+                ),
+              ),
               onPressed: () {
                 PermissionHelper.requestPermissions([PermissionGroup.locationWhenInUse], (permissionsResult) {
                   Navigator.of(context).pop();
@@ -164,7 +194,12 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
               },
             ),
             FlatButton(
-              child: Text(Constant.TEXT_OPEN_APP_SETTINGS),
+              child: Text(
+                Constant.TEXT_OPEN_APP_SETTINGS,
+                style: TextStyle(color: Colors.black,
+                  fontWeight: Constant.TEXT_FONT_WEIGHT,
+                  letterSpacing: Constant.TEXT_LETTER_SPACING,),
+              ),
               onPressed: () {
                 Navigator.of(context).pop();
                 PermissionHelper.openAppSettings();

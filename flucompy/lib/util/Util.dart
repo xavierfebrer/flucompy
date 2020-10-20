@@ -25,13 +25,14 @@ class Util {
     return MaterialColor(color.value, swatch);
   }
 
-  static setSelection(CompassDirection item) async {
+  static Future<CompassDirection> setSelection(CompassDirection item) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt(Constant.PREFS_COMPASS_DIRECTION_SELECTION, item.index);
+    return CompassDirection.values[prefs.getInt(Constant.PREFS_COMPASS_DIRECTION_SELECTION) ?? CompassDirection.RED.index];
   }
 
   static Future<CompassDirection> loadCompassDirection() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return CompassDirection.values[prefs.getInt(Constant.PREFS_COMPASS_DIRECTION_SELECTION) ?? CompassDirection.DEFAULT.index];
+    return CompassDirection.values[prefs.getInt(Constant.PREFS_COMPASS_DIRECTION_SELECTION) ?? CompassDirection.RED.index];
   }
 }
