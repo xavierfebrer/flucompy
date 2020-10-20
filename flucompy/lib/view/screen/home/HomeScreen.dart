@@ -82,17 +82,17 @@ class _HomeScreenState extends State<HomeScreen> {
       barrierDismissible: true,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('Location Permission Required'),
+          title: Text(Constant.TEXT_TITLE_LOCATION_PERMISSION_REQUIRED),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
-                Text('Enable the location permissions to enable the compass functionality.'),
+                Text(Constant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED),
               ],
             ),
           ),
           actions: <Widget>[
             FlatButton(
-              child: Text('Request Permissions'),
+              child: Text(Constant.TEXT_REQUEST_PERMISSIONS),
               onPressed: () {
                 PermissionHelper.requestPermissions([PermissionGroup.locationWhenInUse], (permissionsResult) {
                   Navigator.of(context).pop();
@@ -101,7 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
               },
             ),
             FlatButton(
-              child: Text('Open App Settings'),
+              child: Text(Constant.TEXT_OPEN_APP_SETTINGS),
               onPressed: () {
                 Navigator.of(context).pop();
                 PermissionHelper.openAppSettings();
@@ -119,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
     // TODO
   }
 
-  String getCompassInfo() => "${_lastDirection.toStringAsFixed(2)}º";
+  String getCompassInfo() => Constant.TEXT_COMPASS_INFO(_lastDirection);
 
   void checkLocationPermission() {
     PermissionHelper.checkPermissionStatus(PermissionGroup.locationWhenInUse, (permissionStatus) {
@@ -134,7 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
       stream: FlutterCompass.events,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text('Error reading sensor: ${snapshot.error}');
+          return Text(Constant.TEXT_ERROR_READING_SENSOR(snapshot.error));
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
@@ -145,7 +145,7 @@ class _HomeScreenState extends State<HomeScreen> {
         _lastDirection = direction ?? 0;
         if (direction == null) {
           return Center(
-            child: Text("Sensor not supported."),
+            child: Text(Constant.TEXT_SENSOR_NOT_SUPPORTED),
           );
         }
         return Container(
@@ -153,7 +153,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Transform.rotate(
             angle: ((direction ?? 0) * (math.pi / 180) * -1),
             child: Image.asset(
-              'assets/compass_direction.png',
+              Constant.ASSETS_IMAGE_COMPASS_DIRECTION,
             ),
           ),
         );
@@ -165,7 +165,7 @@ class _HomeScreenState extends State<HomeScreen> {
           showLocationPermissionPopup();
         },
         child: Text(
-          "Check Permissions",
+          Constant.TEXT_CHECK_PERMISSIONS,
           style: TextStyle(
             color: Constant.COLOR_TEXT_LIGHT,
           ),
