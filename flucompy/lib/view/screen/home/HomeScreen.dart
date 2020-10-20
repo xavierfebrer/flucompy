@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
   _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   bool _hasPermissions = false;
   double _lastDirection = 0.0;
   CompassDirection _currentSelection = CompassDirection.DEFAULT;
@@ -26,6 +26,7 @@ class _HomeScreenState extends State<HomeScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       onRefresh();
     });
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
@@ -35,6 +36,12 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: getHomeAppBar(),
       body: getHomeBody(),
     );
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   Widget getHomeAppBar() {
@@ -69,6 +76,12 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  void onInputShare() => Share.share(getCompassInfo());
+
+  void onOpenSettings() => FlucompyNavigator.getInstance().navigateToSettings(context, false, (){
+    onRefresh();
+  });
+
   Widget getHomeBody() {
     return SafeArea(
         child: Container(
@@ -76,59 +89,6 @@ class _HomeScreenState extends State<HomeScreen> {
             child: Center(
               child: getCompassWidget(),
             )));
-  }
-
-  Future<void> showLocationPermissionPopup() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(Constant.TEXT_TITLE_LOCATION_PERMISSION_REQUIRED),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(Constant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(Constant.TEXT_REQUEST_PERMISSIONS),
-              onPressed: () {
-                PermissionHelper.requestPermissions([PermissionGroup.locationWhenInUse], (permissionsResult) {
-                  Navigator.of(context).pop();
-                  checkLocationPermission();
-                });
-              },
-            ),
-            FlatButton(
-              child: Text(Constant.TEXT_OPEN_APP_SETTINGS),
-              onPressed: () {
-                Navigator.of(context).pop();
-                PermissionHelper.openAppSettings();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  void onInputShare() => Share.share(getCompassInfo());
-
-  void onOpenSettings() => FlucompyNavigator.getInstance().navigateToSettings(context, false, (){
-    onRefresh();
-  });
-
-  String getCompassInfo() => Constant.TEXT_COMPASS_INFO(_lastDirection);
-
-  void checkLocationPermission() {
-    PermissionHelper.checkPermissionStatus(PermissionGroup.locationWhenInUse, (permissionStatus) {
-      setState(() {
-        _hasPermissions = permissionStatus == PermissionStatus.granted;
-      });
-    });
   }
 
   Widget getCompassWidget() {
@@ -178,6 +138,53 @@ class _HomeScreenState extends State<HomeScreen> {
       return compassWidget;
     }
   }
+
+  Future<void> showLocationPermissionPopup() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(Constant.TEXT_TITLE_LOCATION_PERMISSION_REQUIRED),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                Text(Constant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED),
+              ],
+            ),
+          ),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(Constant.TEXT_REQUEST_PERMISSIONS),
+              onPressed: () {
+                PermissionHelper.requestPermissions([PermissionGroup.locationWhenInUse], (permissionsResult) {
+                  Navigator.of(context).pop();
+                  checkLocationPermission();
+                });
+              },
+            ),
+            FlatButton(
+              child: Text(Constant.TEXT_OPEN_APP_SETTINGS),
+              onPressed: () {
+                Navigator.of(context).pop();
+                PermissionHelper.openAppSettings();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void checkLocationPermission() {
+    PermissionHelper.checkPermissionStatus(PermissionGroup.locationWhenInUse, (permissionStatus) {
+      setState(() {
+        _hasPermissions = permissionStatus == PermissionStatus.granted;
+      });
+    });
+  }
+
+  String getCompassInfo() => Constant.TEXT_COMPASS_INFO(_lastDirection);
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
