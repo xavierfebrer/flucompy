@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:share/share.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -60,14 +59,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       actions: <Widget>[
         IconButton(
           icon: Icon(
-            Icons.share,
-          ),
-          onPressed: () {
-            onInputShare();
-          },
-        ),
-        IconButton(
-          icon: Icon(
             Icons.settings,
           ),
           onPressed: () {
@@ -77,8 +68,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       ],
     );
   }
-
-  void onInputShare() => Share.share(getCompassInfo());
 
   void onOpenSettings() => FlucompyNavigator.getInstance().navigateToSettings(context, false, () {
         onRefresh();
@@ -218,8 +207,6 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       });
     });
   }
-
-  String getCompassInfo() => Constant.TEXT_COMPASS_INFO(_lastDirection);
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
