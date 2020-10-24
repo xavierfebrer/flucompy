@@ -2,8 +2,14 @@ import 'package:flucompy/util/Constant.dart';
 import 'package:flucompy/util/Util.dart';
 import 'package:flucompy/view/screen/home/HomeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-void main() => runApp(FluCompyApp());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_) {
+    runApp(FluCompyApp());
+  });
+}
 
 class FluCompyApp extends StatelessWidget {
   @override
