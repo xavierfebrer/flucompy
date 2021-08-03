@@ -44,7 +44,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       iconTheme: IconThemeData(color: FlucompyConstant.COLOR_TEXT_LIGHT),
       centerTitle: false,
-      backgroundColor: Theme.of(context).accentColor,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
     );
   }
 

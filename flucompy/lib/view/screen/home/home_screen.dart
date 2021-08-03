@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         ),
       ),
       centerTitle: false,
-      backgroundColor: Theme.of(context).accentColor,
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       iconTheme: IconThemeData(color: FlucompyConstant.COLOR_TEXT_LIGHT),
       actions: <Widget>[
         IconButton(
@@ -138,7 +138,7 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
             letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
           ),
         ),
-        color: Theme.of(context).accentColor,
+        color: Theme.of(context).colorScheme.secondary,
       );
     } else {
       return compassWidget;

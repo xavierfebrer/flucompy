@@ -148,7 +148,7 @@ packages:
       path: "../../hack2s_flutter_util/hack2s_flutter_util"
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "1.0.2+3"
   js:
     dependency: transitive
     description:
