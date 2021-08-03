@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-class Constant {
-  static const String EMPTY_STRING = "";
+class FlucompyConstant {
   static const String APP_NAME = "Flucompy";
   static const Color COLOR_PRIMARY = Color(0xFF14B951);
   static const Color COLOR_ACCENT = Color(0xFF795548);
@@ -30,7 +29,7 @@ class Constant {
   static FontWeight TEXT_FONT_WEIGHT_BOLD = FontWeight.w400;
   static double TEXT_LETTER_SPACING = -0.0;
 
-  static String TEXT_ERROR_READING_SENSOR(String error) => "Error reading sensor: $error";
+  static String TEXT_ERROR_READING_SENSOR(Object? error) => "Error reading sensor: $error";
 
   static String TEXT_COMPASS_INFO(double lastDirection) => "${lastDirection.toStringAsFixed(2)}º";
 
