@@ -1,5 +1,5 @@
-import 'package:flucompy/util/Constant.dart';
-import 'package:flucompy/util/Util.dart';
+import 'package:flucompy/util/constant.dart';
+import 'package:flucompy/util/settings_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 
@@ -14,8 +14,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Util.loadCompassDirection().then((value) {
+    WidgetsBinding.instance!.addPostFrameCallback((_) {
+      FlucompySettingsUtil.loadCompassDirection().then((value) {
         setState(() {
           _currentSelection = value;
         });
@@ -32,17 +32,17 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
   }
 
-  Widget getSettingsAppBar() {
+  AppBar getSettingsAppBar() {
     return AppBar(
       title: Text(
-        Constant.TEXT_SETTINGS,
+        FlucompyConstant.TEXT_SETTINGS,
         style: TextStyle(
-          color: Constant.COLOR_TEXT_LIGHT,
-          fontWeight: Constant.TEXT_FONT_WEIGHT,
-          letterSpacing: Constant.TEXT_LETTER_SPACING,
+          color: FlucompyConstant.COLOR_TEXT_LIGHT,
+          fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT,
+          letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
         ),
       ),
-      iconTheme: IconThemeData(color: Constant.COLOR_TEXT_LIGHT),
+      iconTheme: IconThemeData(color: FlucompyConstant.COLOR_TEXT_LIGHT),
       centerTitle: false,
       backgroundColor: Theme.of(context).accentColor,
     );
@@ -51,25 +51,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
   Widget getSettingsBody() {
     return SafeArea(
       child: Container(
-        padding: EdgeInsets.all(Constant.PADDING_SETTINGS_BORDER),
+        padding: EdgeInsets.all(FlucompyConstant.PADDING_SETTINGS_BORDER),
         child: Center(
           child: ListView.separated(
             separatorBuilder: (context, index) => Divider(
-              color: Constant.COLOR_ACCENT,
+              color: FlucompyConstant.COLOR_ACCENT,
             ),
             itemCount: CompassDirection.values.length,
             itemBuilder: (context, index) => ListTile(
-              contentPadding: EdgeInsets.all(Constant.PADDING_COMPASS_DIRECTION_TILE),
+              contentPadding: EdgeInsets.all(FlucompyConstant.PADDING_COMPASS_DIRECTION_TILE),
               title: RichText(
                 text: TextSpan(
                   style: TextStyle(
-                    fontSize: Constant.TEXT_FONT_SIZE_BIG,
-                    fontWeight: Constant.TEXT_FONT_WEIGHT_BOLD,
-                    letterSpacing: Constant.TEXT_LETTER_SPACING,
+                    fontSize: FlucompyConstant.TEXT_FONT_SIZE_BIG,
+                    fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_BOLD,
+                    letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
                   ),
-                  children: List.generate(Constant.TEXTS_COMPASS_DIRECTION[index].length, (subIndex) {
-                    String text = Constant.TEXTS_COMPASS_DIRECTION[index][subIndex];
-                    Color color = Constant.COLORS_COMPASS_DIRECTION[index][subIndex];
+                  children: List.generate(FlucompyConstant.TEXTS_COMPASS_DIRECTION[index].length, (subIndex) {
+                    String text = FlucompyConstant.TEXTS_COMPASS_DIRECTION[index][subIndex];
+                    Color color = FlucompyConstant.COLORS_COMPASS_DIRECTION[index][subIndex];
                     return TextSpan(
                         text: text,
                         style: TextStyle(
@@ -78,9 +78,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   }),
                 ),
               ),
-              leading: Image.asset(Constant.ASSETS_IMAGE_COMPASS_DIRECTION_LIST[index]),
+              leading: Image.asset(FlucompyConstant.ASSETS_IMAGE_COMPASS_DIRECTION_LIST[index]),
               onTap: () {
-                Util.setSelection(CompassDirection.values[index]).then((value) {
+                FlucompySettingsUtil.setSelection(CompassDirection.values[index]).then((value) {
                   _currentSelection = value;
                   Navigator.pop(context);
                 });
