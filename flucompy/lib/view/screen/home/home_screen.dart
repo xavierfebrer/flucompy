@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_compass/flutter_compass.dart';
 import 'package:hack2s_flutter_util/util/permission_helper.dart';
+import 'package:hack2s_flutter_util/util/popup_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -126,8 +127,11 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
       return RaisedButton(
         padding: EdgeInsets.all(FlucompyConstant.PADDING_BUTTON_CHECK_PERMISSIONS),
         elevation: FlucompyConstant.ELEVATION_BUTTON_CHECK_PERMISSIONS,
-        onPressed: () {
-          showLocationPermissionPopup();
+        onPressed: () async {
+          await Hack2sPopupUtil.showRequestPermissionsPopup(context, FlucompyConstant.TEXT_TITLE_LOCATION_PERMISSION_REQUIRED,
+              FlucompyConstant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED, [Permission.locationWhenInUse], (_) async {
+            await checkLocationPermission();
+          });
         },
         child: Text(
           FlucompyConstant.TEXT_CHECK_PERMISSIONS,
@@ -145,64 +149,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
     }
   }
 
-  Future<void> showLocationPermissionPopup() async {
-    return showDialog<void>(
-      context: context,
-      barrierDismissible: true,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(FlucompyConstant.TEXT_TITLE_LOCATION_PERMISSION_REQUIRED),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(FlucompyConstant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED,
-                    style: TextStyle(
-                      color: FlucompyConstant.COLOR_TEXT_DARK,
-                      fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT,
-                      letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
-                    )),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            RaisedButton(
-              color: Theme.of(context).primaryColor,
-              child: Text(
-                FlucompyConstant.TEXT_REQUEST_PERMISSIONS,
-                style: TextStyle(
-                  color: FlucompyConstant.COLOR_TEXT_LIGHT,
-                  fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_BOLD,
-                  letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
-                ),
-              ),
-              onPressed: () {
-                PermissionHelper.requestPermissions([Permission.locationWhenInUse]);
-                Navigator.of(context).pop();
-                checkLocationPermission();
-              },
-            ),
-            FlatButton(
-              child: Text(
-                FlucompyConstant.TEXT_OPEN_APP_SETTINGS,
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT,
-                  letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
-                ),
-              ),
-              onPressed: () async {
-                Navigator.of(context).pop();
-                await PermissionHelper.openSettingsApp();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   Future<void> checkLocationPermission() async {
-    PermissionStatus permissionStatus = await PermissionHelper.checkPermissionStatus(Permission.locationWhenInUse);
+    PermissionStatus permissionStatus = await Hack2sPermissionHelper.checkPermissionStatus(Permission.locationWhenInUse);
     setState(() {
       _hasPermissions = permissionStatus == PermissionStatus.granted;
     });

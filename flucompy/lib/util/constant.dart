@@ -19,6 +19,7 @@ class FlucompyConstant {
   static String TEXT_TITLE_LOCATION_PERMISSION_REQUIRED = "Location Permission Required";
   static String TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED = "Enable the location permissions to enable the compass functionality.";
   static String TEXT_OPEN_APP_SETTINGS = "Open App Settings";
+  static String TEXT_CLOSE = "Close";
   static String TEXT_REQUEST_PERMISSIONS = "Request Permissions";
   static String TEXT_SENSOR_NOT_SUPPORTED = "Sensor not supported.";
   static String TEXT_CHECK_PERMISSIONS = "Check Permissions";
