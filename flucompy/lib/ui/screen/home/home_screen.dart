@@ -1,80 +1,67 @@
 import 'dart:math' as math;
 
+import 'package:flucompy/presenter/home_state_presenter.dart';
+import 'package:flucompy/ui/navigation/navigator.dart';
+import 'package:flucompy/ui/view/home_view.dart';
+import 'package:flucompy/ui/view/state/home_view_state.dart';
 import 'package:flucompy/util/constant.dart';
 import 'package:flucompy/util/settings_util.dart';
-import 'package:flucompy/view/navigation/navigator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_compass/flutter_compass.dart';
+import 'package:hack2s_flutter_util/util/app_data_provider.dart';
+import 'package:hack2s_flutter_util/util/app_util.dart';
 import 'package:hack2s_flutter_util/util/permission_helper.dart';
 import 'package:hack2s_flutter_util/util/popup_util.dart';
+import 'package:hack2s_flutter_util/view/screen/base_screen.dart';
+import 'package:hack2s_flutter_util/view/util/view_util.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends BaseScreen<HomeView, HomeViewState> implements HomeView {
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState(this);
 }
 
-class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
+class HomeScreenState extends BaseScreenState<HomeView, HomeViewState, HomeStatePresenter, HomeScreen> implements HomeViewState {
   bool _hasPermissions = false;
   double _lastDirection = 0.0;
   CompassDirection _currentSelection = CompassDirection.RED;
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((_) {
-      onRefresh();
-    });
-    WidgetsBinding.instance!.addObserver(this);
+  HomeScreenState(HomeScreen screen) {
+    presenter = HomeStatePresenterImpl(screen, this);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Theme.of(context).primaryColor,
-      appBar: getHomeAppBar(),
-      body: getHomeBody(),
-    );
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
-    super.dispose();
-  }
-
-  AppBar getHomeAppBar() {
-    return AppBar(
-      title: Text(
-        FlucompyConstant.APP_NAME,
-        style: TextStyle(
-          color: FlucompyConstant.COLOR_TEXT_LIGHT,
-          fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT,
-          letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
-        ),
-      ),
-      centerTitle: false,
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-      iconTheme: IconThemeData(color: FlucompyConstant.COLOR_TEXT_LIGHT),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(
-            Icons.settings,
+    return Hack2sViewUtil.getBaseState(context,
+        backgroundColor: Theme.of(context).primaryColor,
+        appBar: Hack2sViewUtil.getAppBar(
+          context,
+          title: Hack2sAppDataProvider.appDataProvider.APP_NAME,
+          titleTextStyle: Hack2sViewUtil.getDefaultPrimaryTextStyle(
+            context,
+            fontSize: FlucompyConstant.TEXT_FONT_SIZE_BIG,
+            color: Hack2sAppDataProvider.appDataProvider.COLOR_TEXT(true),
+            fontWeight: Hack2sAppDataProvider.appDataProvider.TEXT_FONT_WEIGHT_LIGHT,
+            letterSpacing: Hack2sAppDataProvider.appDataProvider.TEXT_LETTER_SPACING,
           ),
-          onPressed: () {
-            onOpenSettings();
-          },
+          showBottom: true,
+          actions: <Widget>[
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+              ),
+              onPressed: () async => await onOpenSettings(),
+            ),
+          ],
+          centerTitle: true,
         ),
-      ],
-    );
+        body: getBody());
   }
 
-  void onOpenSettings() => FlucompyNavigator.navigateToSettings(context, false, () {
-        onRefresh();
-      });
+  Future<void> onOpenSettings() async => await presenter.onSettingsSelected();
 
-  Widget getHomeBody() {
+  Widget getBody() {
     return SafeArea(
         child: Container(
             padding: EdgeInsets.all(FlucompyConstant.PADDING_HOME_BORDER),
@@ -90,8 +77,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
         if (snapshot.hasError) {
           return Text(FlucompyConstant.TEXT_ERROR_READING_SENSOR(snapshot.error),
               style: TextStyle(
-                color: FlucompyConstant.COLOR_TEXT_DARK,
-                fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT,
+                color: FlucompyConstant.COLOR_TEXT(false),
+                fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_LIGHT,
                 letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
               ));
         }
@@ -106,8 +93,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           return Center(
             child: Text(FlucompyConstant.TEXT_SENSOR_NOT_SUPPORTED,
                 style: TextStyle(
-                  color: FlucompyConstant.COLOR_TEXT_DARK,
-                  fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT,
+                  color: FlucompyConstant.COLOR_TEXT(false),
+                  fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_LIGHT,
                   letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
                 )),
           );
@@ -137,8 +124,8 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
           FlucompyConstant.TEXT_CHECK_PERMISSIONS,
           style: TextStyle(
             fontSize: FlucompyConstant.TEXT_FONT_SIZE_BIG,
-            color: FlucompyConstant.COLOR_TEXT_LIGHT,
-            fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_BOLD,
+            color: FlucompyConstant.COLOR_TEXT(true),
+            fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_LIGHT,
             letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
           ),
         ),
@@ -157,16 +144,13 @@ class _HomeScreenState extends State<HomeScreen> with WidgetsBindingObserver {
   }
 
   @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      onRefresh();
-    }
-  }
-
-  void onRefresh() {
-    FlucompySettingsUtil.loadCompassDirection().then((value) {
+  Future<void> onRefresh() async {
+    await FlucompySettingsUtil.loadCompassDirection().then((value) async {
       _currentSelection = value;
-      checkLocationPermission();
+      await checkLocationPermission();
     });
   }
+
+  @override
+  Future<void> goToSettings() async => FlucompyNavigator.navigateToSettings(context, false, () async => await presenter.onAppResume());
 }

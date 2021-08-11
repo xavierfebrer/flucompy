@@ -4,17 +4,29 @@ import 'package:flutter/material.dart';
 
 class FlucompyConstant {
   static const String APP_NAME = "Flucompy";
+  static const String LOG_TAG = APP_NAME + " Log";
   static const Color COLOR_PRIMARY = Color(0xFF14B951);
-  static const Color COLOR_ACCENT = Color(0xFF795548);
-  static const Color COLOR_TEXT_LIGHT = Color(0xFFF2F2F2);
-  static const Color COLOR_TEXT_LIGHT_2 = Color(0xFFD1D1D1);
-  static const Color COLOR_TEXT_DARK = Color(0xFF212121);
-  static const Color COLOR_TEXT_DARK_2 = Color(0xFF535353);
+  static const Color COLOR_SECONDARY = Color(0xFF795548);
+
+  static Color COLOR_TEXT([bool darkMode = false]) => !darkMode ? Color(0xFF212121) : Color(0xFFFFFFFF);
+
+  static Color COLOR_TEXT_2([bool darkMode = false]) => !darkMode ? Color(0xFF757575) : Color(0xFFD1D1D1);
+  static const double TEXT_PRIMARY_FONT_SIZE = 18;
+  static const double TEXT_SECONDARY_FONT_SIZE = 16;
+  static const FontWeight TEXT_FONT_WEIGHT_LIGHT = FontWeight.w300;
+  static const FontWeight TEXT_FONT_WEIGHT = FontWeight.w400;
+  static const FontWeight TEXT_FONT_WEIGHT_MEDIUM = FontWeight.w500;
+  static const FontWeight TEXT_FONT_WEIGHT_SEMI_BOLD = FontWeight.w600;
+  static const FontWeight TEXT_FONT_WEIGHT_BOLD = FontWeight.w700;
+  static const double TEXT_LETTER_SPACING = -0.0;
+
   static const double PADDING_HOME_BORDER = 7.0;
   static const double PADDING_SETTINGS_BORDER = 0.0;
   static const double PADDING_COMPASS_DIRECTION_TILE = 16.0;
   static const double PADDING_BUTTON_CHECK_PERMISSIONS = 32.0;
   static const double ELEVATION_BUTTON_CHECK_PERMISSIONS = 16.0;
+
+  static double TEXT_FONT_SIZE_BIG = 26;
 
   static String TEXT_TITLE_LOCATION_PERMISSION_REQUIRED = "Location Permission Required";
   static String TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED = "Enable the location permissions to enable the compass functionality.";
@@ -24,11 +36,6 @@ class FlucompyConstant {
   static String TEXT_SENSOR_NOT_SUPPORTED = "Sensor not supported.";
   static String TEXT_CHECK_PERMISSIONS = "Check Permissions";
   static String TEXT_SETTINGS = "Settings";
-
-  static double TEXT_FONT_SIZE_BIG = 26;
-  static FontWeight TEXT_FONT_WEIGHT = FontWeight.w300;
-  static FontWeight TEXT_FONT_WEIGHT_BOLD = FontWeight.w400;
-  static double TEXT_LETTER_SPACING = -0.0;
 
   static String TEXT_ERROR_READING_SENSOR(Object? error) => "Error reading sensor: $error";
 
