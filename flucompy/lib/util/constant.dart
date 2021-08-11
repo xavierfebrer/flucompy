@@ -20,8 +20,6 @@ class FlucompyConstant {
   static const FontWeight TEXT_FONT_WEIGHT_BOLD = FontWeight.w700;
   static const double TEXT_LETTER_SPACING = -0.0;
 
-  static const double PADDING_HOME_BORDER = 7.0;
-  static const double PADDING_SETTINGS_BORDER = 0.0;
   static const double PADDING_COMPASS_DIRECTION_TILE = 16.0;
   static const double PADDING_BUTTON_CHECK_PERMISSIONS = 32.0;
   static const double ELEVATION_BUTTON_CHECK_PERMISSIONS = 16.0;

@@ -27,68 +27,43 @@ class SettingsScreenState extends BaseScreenState<SettingsView, SettingsViewStat
         appBar: Hack2sViewUtil.getAppBar(
           context,
           title: FlucompyConstant.TEXT_SETTINGS,
-          showBottom: true,
           centerTitle: false,
         ),
-        body: getSettingsBody());
+        body: getBody());
   }
 
-  AppBar getSettingsAppBar() {
-    return AppBar(
-      title: Text(
-        FlucompyConstant.TEXT_SETTINGS,
-        style: TextStyle(
-          color: FlucompyConstant.COLOR_TEXT(true),
-          fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_LIGHT,
-          letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
-        ),
-      ),
-      iconTheme: IconThemeData(color: FlucompyConstant.COLOR_TEXT(true)),
-      centerTitle: false,
-      backgroundColor: Theme.of(context).colorScheme.secondary,
-    );
-  }
-
-  Widget getSettingsBody() {
+  Widget getBody() {
     return SafeArea(
-      child: Container(
-        padding: EdgeInsets.all(FlucompyConstant.PADDING_SETTINGS_BORDER),
-        child: Center(
-          child: ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            itemCount: CompassDirection.values.length,
-            itemBuilder: (context, index) => ListTile(
-              contentPadding: EdgeInsets.all(FlucompyConstant.PADDING_COMPASS_DIRECTION_TILE),
-              title: RichText(
-                text: TextSpan(
-                  style: TextStyle(
-                    fontSize: FlucompyConstant.TEXT_FONT_SIZE_BIG,
-                    fontWeight: FlucompyConstant.TEXT_FONT_WEIGHT_LIGHT,
-                    letterSpacing: FlucompyConstant.TEXT_LETTER_SPACING,
-                  ),
-                  children: List.generate(FlucompyConstant.TEXTS_COMPASS_DIRECTION[index].length, (subIndex) {
-                    String text = FlucompyConstant.TEXTS_COMPASS_DIRECTION[index][subIndex];
-                    Color color = FlucompyConstant.COLORS_COMPASS_DIRECTION[index][subIndex];
-                    return TextSpan(
-                      text: text,
-                      style: Hack2sViewUtil.getDefaultPrimaryTextStyle(
-                        context,
-                        fontSize: FlucompyConstant.TEXT_FONT_SIZE_BIG,
-                        color: !Hack2sAppUtil.isDarkMode(context) ? color : null,
-                        fontWeight: Hack2sAppDataProvider.appDataProvider.TEXT_FONT_WEIGHT_LIGHT,
-                        letterSpacing: Hack2sAppDataProvider.appDataProvider.TEXT_LETTER_SPACING,
-                      ),
-                    );
-                  }),
-                ),
+      child: ListView.separated(
+        separatorBuilder: (context, index) => Hack2sViewUtil.getDefaultListDivider(context),
+        itemCount: CompassDirection.values.length,
+        itemBuilder: (context, index) => ListTile(
+          contentPadding: EdgeInsets.all(FlucompyConstant.PADDING_COMPASS_DIRECTION_TILE),
+          title: RichText(
+            text: TextSpan(
+              style: Hack2sViewUtil.getDefaultPrimaryTextStyle(
+                context,
+                fontSize: FlucompyConstant.TEXT_FONT_SIZE_BIG,
+                fontWeight: Hack2sAppDataProvider.appDataProvider.TEXT_FONT_WEIGHT_LIGHT,
               ),
-              leading: Image.asset(FlucompyConstant.ASSETS_IMAGE_COMPASS_DIRECTION_LIST[index]),
-              onTap: () async => await presenter.onCompassSelection(index),
-              isThreeLine: false,
+              children: List.generate(FlucompyConstant.TEXTS_COMPASS_DIRECTION[index].length, (subIndex) {
+                String text = FlucompyConstant.TEXTS_COMPASS_DIRECTION[index][subIndex];
+                Color color = FlucompyConstant.COLORS_COMPASS_DIRECTION[index][subIndex];
+                return TextSpan(
+                  text: text,
+                  style: Hack2sViewUtil.getDefaultPrimaryTextStyle(
+                    context,
+                    fontSize: FlucompyConstant.TEXT_FONT_SIZE_BIG,
+                    color: !Hack2sAppUtil.isDarkMode(context) ? color : null,
+                    fontWeight: Hack2sAppDataProvider.appDataProvider.TEXT_FONT_WEIGHT_LIGHT,
+                  ),
+                );
+              }),
             ),
           ),
+          leading: Image.asset(FlucompyConstant.ASSETS_IMAGE_COMPASS_DIRECTION_LIST[index]),
+          onTap: () async => await presenter.onCompassSelection(index),
+          isThreeLine: false,
         ),
       ),
     );
