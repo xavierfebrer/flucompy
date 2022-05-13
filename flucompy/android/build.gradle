@@ -1,3 +1,29 @@
+def getSignFile(String file) {
+    Properties properties = readFile(file)
+    return properties.getProperty("KEYSTORE_FILE")
+}
+
+def getSignFilePassword(String file) {
+    Properties properties = readFile(file)
+    return properties.getProperty("KEYSTORE_PASSWORD")
+}
+
+def getSignAlias(String file) {
+    Properties properties = readFile(file)
+    return properties.getProperty("KEY_ALIAS")
+}
+
+def getSignAliasPassword(String file) {
+    Properties properties = readFile(file)
+    return properties.getProperty("KEY_PASSWORD")
+}
+
+def readFile(String file) {
+    Properties properties = new Properties()
+    properties.load(project.rootProject.file(file).newDataInputStream())
+    return properties
+}
+
 buildscript {
     ext.kotlin_version = '1.6.10'
     repositories {
