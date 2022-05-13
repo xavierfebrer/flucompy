@@ -1,38 +1,12 @@
-def getSignFile(String file) {
-    Properties properties = readFile(file)
-    return properties.getProperty("KEYSTORE_FILE")
-}
-
-def getSignFilePassword(String file) {
-    Properties properties = readFile(file)
-    return properties.getProperty("KEYSTORE_PASSWORD")
-}
-
-def getSignAlias(String file) {
-    Properties properties = readFile(file)
-    return properties.getProperty("KEY_ALIAS")
-}
-
-def getSignAliasPassword(String file) {
-    Properties properties = readFile(file)
-    return properties.getProperty("KEY_PASSWORD")
-}
-
-def readFile(String file) {
-    Properties properties = new Properties()
-    properties.load(project.rootProject.file(file).newDataInputStream())
-    return properties
-}
-
 buildscript {
-    ext.kotlin_version = '1.3.50'
+    ext.kotlin_version = '1.6.10'
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:7.1.2'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -40,7 +14,7 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()
     }
 }
 
