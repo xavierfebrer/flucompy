@@ -16,7 +16,7 @@ class SettingsScreen extends BaseScreen<SettingsView, SettingsViewState> impleme
 
 class SettingsScreenState extends BaseScreenState<SettingsView, SettingsViewState, SettingsStatePresenter, SettingsScreen>
     implements SettingsViewState {
-  SettingsScreenState(SettingsScreen screen) {
+  SettingsScreenState(SettingsScreen screen) : super(screen) {
     presenter = SettingsStatePresenterImpl(screen, this);
   }
 

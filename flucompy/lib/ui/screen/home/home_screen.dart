@@ -26,7 +26,7 @@ class HomeScreenState extends BaseScreenState<HomeView, HomeViewState, HomeState
   double _lastDirection = 0.0;
   CompassDirection _currentSelection = CompassDirection.RED;
 
-  HomeScreenState(HomeScreen screen) {
+  HomeScreenState(HomeScreen screen) : super(screen) {
     presenter = HomeStatePresenterImpl(screen, this);
   }
 
@@ -99,9 +99,12 @@ class HomeScreenState extends BaseScreenState<HomeView, HomeViewState, HomeState
     ));
     if (!_hasPermissions) {
       return Center(
-        child: RaisedButton(
-          padding: EdgeInsets.all(FlucompyConstant.PADDING_BUTTON_CHECK_PERMISSIONS),
-          elevation: FlucompyConstant.ELEVATION_BUTTON_CHECK_PERMISSIONS,
+        child: ElevatedButton(
+          style: ButtonStyle(
+            padding: MaterialStateProperty.all(EdgeInsets.all(FlucompyConstant.PADDING_BUTTON_CHECK_PERMISSIONS)),
+            elevation: MaterialStateProperty.all(FlucompyConstant.ELEVATION_BUTTON_CHECK_PERMISSIONS),
+            backgroundColor: MaterialStateProperty.all(Theme.of(context).colorScheme.secondary),
+          ),
           onPressed: () async {
             await Hack2sPopupUtil.showRequestPermissionsPopup(context, FlucompyConstant.TEXT_TITLE_LOCATION_PERMISSION_REQUIRED,
                 FlucompyConstant.TEXT_MESSAGE_LOCATION_PERMISSION_REQUIRED, [Permission.locationWhenInUse], (_) async {
@@ -116,7 +119,6 @@ class HomeScreenState extends BaseScreenState<HomeView, HomeViewState, HomeState
               fontWeight: Hack2sAppDataProvider.appDataProvider.TEXT_FONT_WEIGHT_LIGHT,
             ),
           ),
-          color: Theme.of(context).colorScheme.secondary,
         ),
       );
     } else {
